@@ -8,12 +8,8 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-## 1 COVID-19 Data
-**1.1 Load a single month of African data**
 
-**1. Load the list of African countries countries-africa.csv. How many African countries are listed here?**
-
-Answer: There are 58 countries listed here.
+**Loaded a single month of African data. Loaded the list of African countries countries-africa.csv. There are 58 countries listed here.**
 ```{r}
 Africa <- read.delim("covid/countries-africa.csv.bz2")
 head(Africa,5)
@@ -22,10 +18,7 @@ any(is.na(Africa$country))
 # checking if any country is NA. There are 58 African countries listed in the database.
 ```
 
-**2. Collect all the names of covid data files covid-global... into a character vector. How many files are there?**
-Hint: check out the function list.files, and its argument pattern.
-
-Answer: There are 21 files with names starting with covid data.
+**Collected all the names of covid data files into a character vector. There are 21 files with names starting with covid data.**
 
 ```{r}
 vec= list.files(path = "covid/", pattern = "^covid-global", all.files = FALSE,
@@ -36,8 +29,7 @@ vec
 length(vec)
 ```
 
-**3. Load the COVID data file for October 2021. Ensure you know the variables there.
-But the global data file contains not just African countries, so you have just to select the African ones from the list. Unfortunately not all the names match.**
+**Loaded the COVID data file for October 2021.Since the global data file contains not just African countries, I just selected the African ones from the list. Unfortunately not all the names match.**
 
 ```{r}
 library(tidyverse)
@@ -48,9 +40,7 @@ head(october2021)
 names(october2021)
 ```
 
-**4. How many African countries in the African Country list do you find in the covid data? Do not attempt to adjust the names for now.**
-
-Answer: 49 countries can be found in Oct 2021 covid data from African countries list
+**49 countries can be found in Oct 2021 covid data from African countries list**
 ```{r}
 library(tidyverse)
 library (dplyr)
@@ -66,31 +56,23 @@ head(AfricaOct2021)
 nrow(AfricaOct2021)
 
 ```
-**5. Which African countries are not matched in the COVID data? Again, do not adjust the names for now.**
-
-Answer: The 9 countries below are not matched in covid data. 
+**The 9 countries below are not matched in covid data.**
 ```{r}
 `%notin%` <- Negate(`%in%`)
 MissingAfricanCountries <- filter(Africa,Africa$country %notin% october2021$Country_Region)
 MissingAfricanCountries
 ```
 
-**6. Why should we care more about these three countries and less about other entities?**
+**We should care more about these countries as their population is higher than the smaller islands. If these countries are ignored, the number of cases and deaths due to covid in Africa could be miscalculated entirely. The data we would be using further would not stay accurate.**
 
-Answer: We should care more about these countries as their population is higher than the smaller islands. If these countries are ignored, the number of cases and deaths due to covid in Africa could be miscalculated entirely. The data we would be using further would not stay accurate.
-
-**7. Next, find how are the names of these three countries (Two Congos and Ivory Coast) written in the covid data.**
-
-Answer: after looking through the Oct 2021 data's list of countries, I found that these 3 countries are written as Congo (Kinshasa), Congo (Brazzaville) and Cote d’Ivoire.
+**Next, find how are the names of these three countries (Two Congos and Ivory Coast) written in the covid data. After looking through the Oct 2021 data's list of countries, I found that these 3 countries are written as Congo (Kinshasa), Congo (Brazzaville) and Cote d’Ivoire.**
 
 ```{r}
 names<-october2021 %>% filter(str_detect(october2021$Country_Region, "^Congo|^Cote"))
 names
 ```
 
-**8. Amend the list of African countries in a way that you can extract all the necessary African countries (you may leave out the islands/territories) from COVID data. Demonstrate that it works.**
-
-Answer: I replaced Ivory Coast in the list of African countries with Cote d'Ivoire, Democratic Republic of the Congo with Congo (Kinshasa) and Republic of the Congo with Congo (Brazzaville).
+**I replaced Ivory Coast in the list of African countries with Cote d'Ivoire, Democratic Republic of the Congo with Congo (Kinshasa) and Republic of the Congo with Congo (Brazzaville).**
 ```{r}
 Africa$country[Africa$country =='Ivory Coast']<-"Cote d'Ivoire"
 Africa$country[Africa$country=='Democratic Republic of the Congo']<-"Congo (Kinshasa)"
@@ -103,9 +85,8 @@ head(Africa)
 MissingAfricanCountries <- filter(Africa,Africa$country %notin% october2021$Country_Region)
 MissingAfricanCountries
 ```
-## 1.2 Load and merge all datasets
 
-**1. The file name is written as “covid-global_<mm>-<date>-<yyyy>.csv.bz2”, and date always “01” in these files. Extract the date part from the first file name as Date object.**
+**The file name is written as “covid-global_<mm>-<date>-<yyyy>.csv.bz2”, and date always “01” in these files. Extracting the date part from the first file name as Date object.**
 
 Answer: Removing the date part of file "covid-global_01-01-2021.csv.bz2" and storing it in a object of date type. 
 ```{r}
@@ -118,7 +99,7 @@ firstDate
 class(firstDate)
 ```
 
-**2. Now it is time to merge all the data files into one.** 
+**Now I merge all the data files into one.** 
 
 ```{r}
 library(tidyverse)
