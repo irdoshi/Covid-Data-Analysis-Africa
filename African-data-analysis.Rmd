@@ -1,8 +1,10 @@
 ---
-title: "Assignment 2"
+title: "Covid data analysis - Africa"
 author: "Isha Doshi"
 date: "2022-10-21"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -106,8 +108,8 @@ library(tidyverse)
 library(lubridate)
 #creating a merged df by binding data from each file after performing processes to extract date, select and rename columns, and selecting African countries
 mergedDf<-NULL
-for (item in vec){
-  df=read.delim(item)
+for (item in vec) {
+  df <- read.delim(paste0("covid/", item))
  item=gsub("^[^_]*_","", item)
  item=gsub("\\..*","",item)
  firstDate= as.Date(item, "%m-%d-%Y")
@@ -121,16 +123,14 @@ mergedDf<- mergedDf[mergedDf$country %in% Africa$country,]
 head(mergedDf)
 nrow(mergedDf)
 ```
-## 1.3 Display time series
-
-**1. Extract the population size from the dataset of African countries. Ensure the result is a valid number, you need to do some math with it next.**
+**Extracted the population size from the dataset of African countries.**
 
 ```{r}
 AfricaPopulationDf= Africa%>%select(country,population)
 head(AfricaPopulationDf)
 ```
 
-**2. For each country, compute the death rate: number of deaths per 1M population. Note: you have to merge the population data with the covid death data you compiled above.**
+**For each country, computed the death rate: number of deaths per 1M population.**
 
 ```{r}
 #Merging AfricanPopulationDf with Africa's covid data
@@ -140,9 +140,7 @@ combinedDf$deathRate<-(combinedDf$Deaths*100000)/as.numeric(combinedDf$populatio
 head(combinedDf)
 ```
 
-**3. Which 10 countries have the largest death rate? (As of the latest date in the data, Oct 1st, 2021).**
-
-Answer: Based on latest data (oct 2021), these are the 10 countries with largest death rate:
+**Analyzing which 10 countries have the largest death rate? (As of the latest date in the data, Oct 1st, 2021).**
 ```{r}
 topTen=combinedDf[order(combinedDf$deathRate, decreasing = TRUE), ]
 topTen=topTen%>%filter(topTen$year=="2021" & topTen$month=="10")
@@ -151,7 +149,7 @@ topTenCountries=head(topTen$country,10)
 topTenCountries
 ```
 
-**4. Make a plot where you show how the death rate has grown in these 10 countries over time. Ensure the plot is appropriately labelled and uses appropriate plot type, colors, and other visual details. **
+**Plotting the growth in death rate in these 10 countries over time. **
 
 ```{r}
 dfToVisualize= combinedDf[combinedDf$country %in% topTenCountries,]
@@ -160,7 +158,7 @@ head(dfToVisualize)
 ggplot(dfToVisualize, aes(x=Date, y=deathRate, fill=country, group=country)) + geom_point(aes(color = country)) +geom_line(aes(color=country))
 ```
 
-**5. Let us also look at the number of monthly deaths: how much has the death rate grown from one month to another in these 10 countries? Compute the number of new monthly deaths (per 1M population) and display on a similar plot. Hint: check out the lag operator for mutate.**
+**Computing the number of new monthly deaths (per 1M population) and displaying it on a similar plot.**
 
 ```{r}
 #correcting the order of data for using lag 
@@ -175,26 +173,4 @@ head(dfToVisualize)
 ggplot(dfToVisualize, aes(x=Date, y=monthlyDeathRate, fill=country, group=country)) + geom_point(aes(color = country)) +geom_line(aes(color=country))
 ```
 
-**6. Which country out of these 10 experienced the highest peak in the new monthly deaths? When was that? How many COVID “waves” can you see on the plot?**
-
-Answer: Seychelles experienced the highest peak in the new monthly deaths. It was in 2020-08 (Aug-2020). I can see three waves in the graph.
-
-## 1.4 Think about this
-
-**Now when you have done all this analysis, imagine you are hired as a consultant for the John Hopkins Covid data project.**
-
-**1.Where would the US be on the top-10 list of African countries?**
-
-Answer: US will be on the top of the list according to https://coronavirus.jhu.edu/data/mortality
-
-**2. What do you think about reliability of these data? Hint: you can consult wikipedia or google for COVID death data reliability** 
-
-Answer: These death reports are based on death certificates, but the reliability of this data can be questionable since a lot of 3rd world countries might not be reporting or tracking deaths caused by covid due to inadequate/limited resources. Countries might also use different processes to test and report COVID-19 deaths, making comparisons between countries difficult. 
-
-**3. What recommendations would you give for the data collection team regarding to how collect/store data? Think about variable names, variable coding, structure of data files, and everything else you struggled with in this problem set. But tell also what is done well.**
-
-Answer:
-
-**Report how much time (hours) did you spend on this problem set. This will help me understand individual workload and challenges with this material.**
-
-Answer: It took me about 5 to 6 hours to complete this problem set. The most challenging questions were 1.3.5 and 1.2.2.
+**Namibia experienced the highest peak in the new monthly deaths. It was in 2020-08 (Aug-2020). I can see three waves of covid in the graph.**
