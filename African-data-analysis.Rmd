@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Loaded a single month of African data. Loaded the list of African countries countries-africa.csv. There are 58 countries listed here.**
 ```{r}
-Africa <- read.delim("covid/countries-africa.csv.bz2")
+Africa <- read.delim("covid/countries-africa.csv")
 head(Africa,5)
 nrow(Africa)
 any(is.na(Africa$country)) 
@@ -36,7 +36,7 @@ length(vec)
 ```{r}
 library(tidyverse)
 library (dplyr)
-october2021= read.delim("covid/covid-global_10-01-2021.csv.bz2")
+october2021= read.delim("covid/covid-global_10-01-2021.csv")
 head(october2021)
 # checking the names of the columns in Oct 2021 data
 names(october2021)
