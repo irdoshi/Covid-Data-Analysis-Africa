@@ -1,4 +1,4 @@
-# Covid-Data-Analysis
+# Covid-Data-Analysis-Africa
 
 In this project, the objective was to analyze and manipulate a COVID-19 dataset for African countries. The dataset contained information regarding confirmed cases and deaths in various countries. The following steps were taken:
 
